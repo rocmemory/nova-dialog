@@ -1,0 +1,20 @@
+{
+  "files": [],
+  "include": ["env.d.ts"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ],
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "allowJs": true,
+    "types": ["node"],
+    "noEmit": false,
+    "outDir": "dist"
+  }
+}

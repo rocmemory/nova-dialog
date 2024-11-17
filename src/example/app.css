@@ -1,0 +1,33 @@
+.demo {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.para {
+    display: block;
+    margin-top: 20px;
+}
+
+.last {
+    margin-bottom: 40px;
+}
+
+.title-major {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.title-major a {
+    font-weight: 400;
+    font-size: 20px;
+    color: #038ed3;
+    cursor: pointer;
+}
+
+.title-minor {
+    font-size: 18px;
+}
+
+.btn-example {
+
+}

@@ -1,0 +1,300 @@
+/* 通用样式 */
+.full {
+    width: 100%;
+    height: 100%;
+}
+
+.corner {
+    left: 0;
+    top: 0;
+}
+
+.scroll-n {
+    overflow: hidden;
+}
+
+.height-hide {
+    height: 0 !important;
+    border: none !important;
+}
+
+.pos-fixed {
+    position: fixed;
+}
+
+.pos-relative {
+    position: relative;
+}
+
+.pos-absolute {
+    position: absolute;
+}
+
+/* 视图框架 */
+.v-dialog-frame {
+    --v-dialog-head-height: 50px;
+}
+
+.v-dialog-frame * {
+    box-sizing: border-box;
+}
+
+.v-dialog-mask {
+    background-color: black;
+    opacity: 0.3;
+}
+
+.v-dialog-canvas {}
+
+.v-dialog-part.part-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.v-dialog-part.part-head {
+    height: var(--v-dialog-head-height);
+}
+
+.v-dialog-part.part-body {
+    flex: 1;
+}
+
+.v-dialog-part.part-foot {
+    border-top: 1px solid #dcdcdc;
+    height: 56px;
+    padding: 0 12px;
+    line-height: 56px;
+    text-align: right;
+}
+
+/* 标题栏 */
+.v-dialog-head {
+    
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.v-dialog-head-content {
+    line-height: var(--v-dialog-head-height);
+}
+
+.v-dialog-head-content.custom {
+    padding: 0 12px;
+}
+
+.v-dialog-head-content.disabled {
+    cursor: wait;
+}
+
+.v-dialog-head-content.move {
+    cursor: move;
+}
+
+.v-dialog-head-content>.icon {
+    margin-left: 14px;
+    margin-right: -4px;
+}
+
+.v-dialog-head-content>h1 {
+    display: inline-block;
+    margin: 0 0 0 12px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.v-dialog-head-buttons {
+    height: var(--v-dialog-head-height);
+    top: 0;
+    right: 0;
+}
+
+.v-dialog-head-buttons>* {
+    vertical-align: top;
+}
+
+.v-dialog-head-buttons .toolkit {
+    display: inline-block;
+    height: calc(var(--v-dialog-head-height) - 1px);
+    margin-right: 6px;
+    padding: 0 16px;
+    line-height: var(--v-dialog-head-height);
+    border-right: 1px solid #dcdcdc;
+    overflow: hidden;
+}
+
+.v-dialog-head.height-hide .v-dialog-head-buttons .toolkit {
+    border-right: none;
+}
+
+.v-dialog-head-buttons button {
+    width: calc(var(--v-dialog-head-height) - 2px);
+    height: calc(var(--v-dialog-head-height) - 1px);
+    margin: 0;
+    background: none;
+    border: none;
+    outline: none;
+    color: #8f8f8f;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.v-dialog-head-buttons button:hover {
+    background-color: rgba(0, 0, 0, 0.07);
+}
+
+.v-dialog-head-buttons button:active {
+    background-color: rgba(0, 0, 0, 0.13);
+}
+
+.v-dialog-head-buttons button:focus {
+    border: none;
+    outline: none;
+}
+
+.v-dialog-head-buttons button.close:hover {
+    background-color: #f33535;
+    color: #ffffff;
+}
+
+.v-dialog-head-buttons button.close:active {
+    background-color: #d60000;
+    color: #ffffff;
+}
+
+/* 弹窗容器 */
+.v-dialog-wrapper {
+    border-radius: 3px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.v-dialog-wrapper.anim {
+    transition: left 0.5s, top 0.5s;
+}
+
+.v-dialog-content:not(.slim) {
+    padding: 12px;
+}
+
+/* 位置控制 */
+.v-dialog-canvas.center {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.v-dialog-canvas.center .v-dialog-wrapper {
+    left: initial !important;
+    top: initial !important;
+}
+
+.v-dialog-canvas.max {
+
+}
+
+.v-dialog-canvas.max .v-dialog-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+
+/* 抖动动画 */
+.buzz {
+    animation-name: animated-buzz-out;
+    animation-duration: .75s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1
+}
+
+@keyframes animated-buzz-out {
+    10% {
+        transform: translate(3px) rotate(2deg)
+    }
+    20% {
+        transform: translate(-3px) rotate(-2deg)
+    }
+    30% {
+        transform: translate(3px) rotate(2deg)
+    }
+    40% {
+        transform: translate(-3px) rotate(-2deg)
+    }
+    50% {
+        transform: translate(2px) rotate(1deg)
+    }
+    60% {
+        transform: translate(-2px) rotate(-1deg)
+    }
+    70% {
+        transform: translate(2px) rotate(1deg)
+    }
+    80% {
+        transform: translate(-2px) rotate(-1deg)
+    }
+    90% {
+        transform: translate(1px) rotate(0)
+    }
+    to {
+        transform: translate(-1px) rotate(0)
+    }
+}
+
+/* 拖拽效果 */
+.resize-handle {
+    position: absolute;
+    background: transparent;
+    z-index: 1;
+}
+
+.resize-handle.disabled {
+    cursor: wait !important;
+}
+
+.resize-handle.top,
+.resize-handle.bottom {
+    left: 0;
+    right: 0;
+    height: 5px;
+    cursor: ns-resize;
+}
+
+.resize-handle.right,
+.resize-handle.left {
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    cursor: ew-resize;
+}
+
+.resize-handle.left.bottom {
+    top: initial;
+    right: initial;
+    cursor: nesw-resize;
+}
+
+.resize-handle.right.bottom {
+    top: initial;
+    left: initial;
+    cursor: nwse-resize;
+}
+
+.resize-handle.top {
+    top: 0;
+}
+
+.resize-handle.right {
+    right: 0;
+}
+
+.resize-handle.bottom {
+    bottom: 0;
+}
+
+.resize-handle.left {
+    left: 0;
+}
+
+.resize-handle:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
