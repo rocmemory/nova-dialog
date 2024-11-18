@@ -1,0 +1,23 @@
+{
+    "name": "nova-dialog",
+    "version": "1.0.3",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vue-tsc && vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "vue": "^3.4.21"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^5.0.4",
+        "@tsconfig/node20": "^20.1.2",
+        "@types/node": "^20.12.2",
+        "@vue/tsconfig": "^0.5.1",
+        "npm-run-all2": "^6.1.2",
+        "typescript": "~5.4.0",
+        "vue-tsc": "^2.0.6",
+        "vite": "^5.2.0"
+    }
+}

@@ -1,5 +1,5 @@
-import { defineComponent, ref, type PropType } from 'vue';
-import { lazy } from '@/utils/lazy';
+import { defineComponent, ref } from 'vue';
+import { lazy } from '../../utils/lazy';
 
 const __window_ins_dialog = window as any;
 if (!__window_ins_dialog.zindex) __window_ins_dialog.zindex = 100;
@@ -28,9 +28,11 @@ export default defineComponent({
             states: ref({
                 resizing: false,
                 moving: false,
+                moved: false,
                 shaking: false,
-                ready: false
-            })
+                ready: true
+            }),
+            observer: <ResizeObserver><unknown>null
         }
     },
 
@@ -145,11 +147,19 @@ export default defineComponent({
 
     unmounted() {
         window.removeEventListener("resize", this.onCanvasResize);
+        this.onHide();
     },
 
     watch: {
         modelValue(val: boolean) {
-            if (val) this.onShown();
+            this.$nextTick().then(() => {
+                if (val) {
+                    this.onShown();
+                }
+                else {
+                    this.onHide();
+                }
+            })
         }
     },
 
@@ -168,10 +178,16 @@ export default defineComponent({
                     this.close();
                 }, this.timeout);
             }
-            setTimeout(() => {
-                this.onResize();
-                this.states.ready = true;
-            }, 1000);
+            this.observer = new ResizeObserver(entries => {
+                if (!this.drag.side && !this.states.moved) {
+                    this.onResize();
+                }
+            });
+            this.observer.observe(this.wrapper!);
+        },
+
+        onHide() {
+            this.observer?.disconnect();
         },
 
         onClosed() {
@@ -182,15 +198,20 @@ export default defineComponent({
 
         //#region Response
 
-        onResize() {
-            this.states.resizing = true;
+        onResize(animate: boolean = false) {
+
             let width = this.wrapper!.offsetWidth,
                 height = this.wrapper!.offsetHeight;
             this.pos.left = (window.innerWidth - width) / 2;
             this.pos.top = (window.innerHeight - height) / 2;
-            setTimeout(() => {
-                this.states.resizing = false;
-            }, 800);
+
+            if (animate) {
+                this.states.resizing = true;
+                setTimeout(() => {
+                    this.states.resizing = false;
+                }, 800);
+            }
+
         },
 
         onCanvasResize() {
@@ -212,7 +233,6 @@ export default defineComponent({
         //#region Drag-Resize
 
         onDragStart(side: number, event: MouseEvent) {
-            if (!this.states.ready) return;
             if (!this.movable) return;
 
             this.drag.side = side;
@@ -269,10 +289,13 @@ export default defineComponent({
         },
 
         onDragEnd() {
-            if (this.drag.side > 0) 
-                this.onResize();
-            else
+            if (this.drag.side > 0) {
+                this.onResize(true);
+            }
+            else {
                 this.states.moving = false;
+                this.states.moved = true;
+            }
             this.drag.side = 0;
             document.removeEventListener("mousemove", this.onDragging);
             document.removeEventListener("mouseup", this.onDragEnd);

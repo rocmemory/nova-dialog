@@ -3,7 +3,7 @@
 
         <!-- 控制区域 -->
         <div class="v-dialog-canvas pos-relative full scroll-n" :style="{ 'z-index': pos.zindex + 2 }"
-             :class="{ 'center': !states.ready, 'max': pos.maximized }" @resize="resized">
+             :class="{ 'max': pos.maximized }" @resize="resized">
 
             <!-- 暗色遮罩层 -->
             <div v-if="mask" class="v-dialog-mask pos-absolute corner full scroll-n" :style="{ 'z-index': pos.zindex + 1 }"
@@ -12,7 +12,7 @@
 
             <!-- 弹窗容器 -->
             <div v-if="modelValue" ref="wrapper" class="v-dialog-wrapper v-dialog-part part-wrapper pos-absolute scroll-n"
-                 :class="[customClass, { 'anim': states.resizing || !states.ready, 'buzz': states.shaking }]"
+                 :class="[customClass, { 'anim': states.resizing, 'buzz': states.shaking }]"
                  :style="{
                     'left': `${pos.left}px`,
                     'top': `${pos.top}px`,
@@ -26,11 +26,11 @@
                 <div class="v-dialog-part part-head v-dialog-head pos-relative" :class="{ 'height-hide': !header }">
 
                     <!-- 标题栏内容 -->
-                    <div v-if="$slots.head" class="v-dialog-head-content custom" :class="{ 'disabled': !states.ready, 'move': states.moving }"
+                    <div v-if="$slots.head" class="v-dialog-head-content custom" :class="{ 'move': states.moving }"
                          @mousedown.prevent="onDragStart(-1, $event)">
                         <slot name="head"></slot>
                     </div>
-                    <div v-else class="v-dialog-head-content" :class="{ 'disabled': !states.ready, 'move': states.moving }"
+                    <div v-else class="v-dialog-head-content" :class="{ 'move': states.moving }"
                          @mousedown.prevent="onDragStart(-1, $event)">
                         <i v-if="icon" class="icon dialogfont" :class="`dialog-icon-${icon}`"></i>
                         <h1>{{ title }}</h1>
@@ -67,22 +67,22 @@
                 </div>
 
                 <!-- 拖拽调整 -->
-                <div v-if="!pos.maximized && resizable" class="resize-handle top" :class="{ 'disabled': !states.ready }"
+                <div v-if="!pos.maximized && resizable" class="resize-handle top"
                      @mousedown.prevent="onDragStart(1, $event)">
                 </div>
-                <div v-if="!pos.maximized && resizable" class="resize-handle right" :class="{ 'disabled': !states.ready }"
+                <div v-if="!pos.maximized && resizable" class="resize-handle right"
                      @mousedown.prevent="onDragStart(2, $event)">
                 </div>
-                <div v-if="!pos.maximized && resizable" class="resize-handle bottom" :class="{ 'disabled': !states.ready }"
+                <div v-if="!pos.maximized && resizable" class="resize-handle bottom"
                      @mousedown.prevent="onDragStart(4, $event)">
                 </div>
-                <div v-if="!pos.maximized && resizable" class="resize-handle left" :class="{ 'disabled': !states.ready }"
+                <div v-if="!pos.maximized && resizable" class="resize-handle left"
                      @mousedown.prevent="onDragStart(8, $event)">
                 </div>
-                <div v-if="!pos.maximized && resizable" class="resize-handle left bottom" :class="{ 'disabled': !states.ready }"
+                <div v-if="!pos.maximized && resizable" class="resize-handle left bottom"
                      @mousedown.prevent="onDragStart(12, $event)">
                 </div>
-                <div v-if="!pos.maximized && resizable" class="resize-handle right bottom" :class="{ 'disabled': !states.ready }"
+                <div v-if="!pos.maximized && resizable" class="resize-handle right bottom"
                      @mousedown.prevent="onDragStart(6, $event)">
                 </div>
 

@@ -1,5 +1,5 @@
 import { defineComponent, ref, type App } from 'vue';
-import NovaDialog from '@/components/nova-dialog/nova-dialog.vue';
+import NovaDialog from 'nova-dialog';
 
 const help_prop = [
     {
@@ -40,7 +40,7 @@ const help_prop = [
     },
     {
         property: 'minimize',
-        desc: 'whether the title bar contains a minimize button',
+        desc: 'whether the title bar contains a minimize button, not supported before version 2.x',
         type: 'boolean',
         initial: 'false'
     },
@@ -76,7 +76,7 @@ const help_prop = [
     },
     {
         property: 'mask',
-        desc: 'show the dark mask layer under the dialog',
+        desc: 'show the dark mask layer behind the dialog',
         type: 'boolean',
         initial: 'true'
     },
@@ -112,7 +112,7 @@ const help_prop = [
     },
     {
         property: 'zone',
-        desc: 'classification identification, which used to store status and user configuration',
+        desc: 'classification identification, which used to store status and user configuration, not supported before version 2.x',
         type: 'string',
         initial: 'empty'
     }

@@ -11,9 +11,9 @@
             </el-table-column>
             <el-table-column min-width="30%" prop="desc" label="desc">
             </el-table-column>
-            <el-table-column min-width="20%" prop="initial" label="default">
-            </el-table-column>
             <el-table-column min-width="15%" prop="type" label="type">
+            </el-table-column>
+            <el-table-column min-width="20%" prop="initial" label="default">
             </el-table-column>
             <el-table-column min-width="20%" label="current">
                 <template #default="{ row }">
