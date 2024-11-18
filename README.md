@@ -2,9 +2,9 @@
 > Full-featured dialog box for [Vue.js](http://vuejs.org).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rocmemory/nova-dialog/refs/heads/main/example/public/previews.gif" />
+  <img src="https://raw.githubusercontent.com/rocmemory/vue-nova-dialog/refs/heads/main/example/public/previews.gif" />
   <br/>
-  <b>Check out the <a href="https://github.com/rocmemory/nova-dialog/tree/main/example" target="_blank">live demo</a>.</b>
+  <b>Check out the <a href="https://github.com/rocmemory/vue-nova-dialog/tree/main/example" target="_blank">live demo</a>.</b>
 </p>
 
 ## Features
@@ -112,6 +112,6 @@ This example below shows all of the slot-usage:
 | close         | Toggle between maximum and normal state. | none |
 
 ## License
-**[nova-dialog](https://github.com/rocmemory/nova-dialog)** by [mengyaming](https://twitter.com/mengyaming) licensed under [MIT](LICENSE).
+**[nova-dialog](https://github.com/rocmemory/vue-nova-dialog)** by [mengyaming](https://twitter.com/mengyaming) licensed under [MIT](LICENSE).
 
 > PS: I would love to know if you're using nova-dialog. Send mail to [mengyaming@live.com](mengyaming@live.com).
