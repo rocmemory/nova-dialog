@@ -173,5 +173,14 @@ export default defineComponent({
 
     components: {
         NovaDialog
+    },
+
+    mounted() {
+        let table: string[] = [];
+        for (let row of help_prop) {
+            table.push(`| ${row.property} | ${row.desc} | ${row.type} | ${row.initial} |`);
+        }
+        let note = table.join('\n');
+        console.log('properties', note);
     }
 })
