@@ -44,9 +44,7 @@
     opacity: 0.3;
 }
 
-.v-dialog-canvas {}
-
-.v-dialog-part.part-wrapper {
+.v-dialog-part.part-player {
     display: flex;
     flex-direction: column;
 }
@@ -69,7 +67,6 @@
 
 /* 标题栏 */
 .v-dialog-head {
-    
     border-bottom: 1px solid #dcdcdc;
 }
 
@@ -97,7 +94,7 @@
 .v-dialog-head-content>h1 {
     display: inline-block;
     margin: 0 0 0 12px;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 500;
 }
 
@@ -105,6 +102,7 @@
     height: var(--v-dialog-head-height);
     top: 0;
     right: 0;
+    z-index: 100;
 }
 
 .v-dialog-head-buttons>* {
@@ -129,9 +127,9 @@
     width: calc(var(--v-dialog-head-height) - 2px);
     height: calc(var(--v-dialog-head-height) - 1px);
     margin: 0;
-    background: none;
     border: none;
     outline: none;
+    background-color: #ffffff;
     color: #8f8f8f;
     overflow: hidden;
     cursor: pointer;
@@ -162,17 +160,34 @@
 
 /* 弹窗容器 */
 .v-dialog-wrapper {
-    border-radius: 3px;
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 3px;
+    text-align: left;
 }
 
 .v-dialog-wrapper.anim {
     transition: left 0.5s, top 0.5s;
 }
 
-.v-dialog-content:not(.slim) {
-    padding: 12px;
+.v-dialog-player {
+    border-radius: 3px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.v-dialog-content {
+    padding: 18px;
+}
+
+.v-dialog-content.padding-slim {
+    padding: 10px;
+}
+
+.v-dialog-content.padding-trim {
+    padding: 0;
+}
+
+.v-dialog-content.padding-large {
+    padding: 25px;
 }
 
 /* 位置控制 */
@@ -188,15 +203,15 @@
     top: initial !important;
 }
 
-.v-dialog-canvas.max {
-
-}
-
 .v-dialog-canvas.max .v-dialog-wrapper {
     width: 100% !important;
     height: 100% !important;
     left: 0 !important;
     top: 0 !important;
+}
+
+.v-dialog-canvas.max:deep(.v-dialog-content > div:first-child) {
+    height: 100%;
 }
 
 /* 抖动动画 */
@@ -255,7 +270,7 @@
 .resize-handle.bottom {
     left: 0;
     right: 0;
-    height: 5px;
+    height: 3px;
     cursor: ns-resize;
 }
 
@@ -263,7 +278,7 @@
 .resize-handle.left {
     top: 0;
     bottom: 0;
-    width: 5px;
+    width: 3px;
     cursor: ew-resize;
 }
 
@@ -293,8 +308,4 @@
 
 .resize-handle.left {
     left: 0;
-}
-
-.resize-handle:hover {
-    background-color: rgba(0, 0, 0, 0.1);
 }

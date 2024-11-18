@@ -1,6 +1,6 @@
 {
     "name": "nova-dialog",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "type": "module",
     "scripts": {
         "dev": "vite",

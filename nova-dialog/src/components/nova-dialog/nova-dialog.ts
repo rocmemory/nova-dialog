@@ -1,4 +1,4 @@
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, type PropType } from 'vue';
 import { lazy } from '../../utils/lazy';
 
 const __window_ins_dialog = window as any;
@@ -6,12 +6,17 @@ if (!__window_ins_dialog.zindex) __window_ins_dialog.zindex = 100;
 const _vdialog_default_width = 600;
 
 export default defineComponent({
+
+    name: 'nova-dialog',
+    emits: ['opened', 'change', 'closed', 'update:modelValue'],
+
     setup() {
         return {
             wrapper: ref<HTMLElement | null>(null),
             size: ref({
                 width: _vdialog_default_width,
-                height: 500
+                height: 500,
+                height_initial: 0
             }),
             pos: ref({
                 left: 0,
@@ -117,10 +122,10 @@ export default defineComponent({
             type: Number,
             default: 0
         },
-        /** 无内边距风格 */
-        slim: {
-            type: Boolean,
-            default: false
+        /** 内边距风格或数值(slim|trim|large) */
+        padding: {
+            type: String as PropType<number | 'slim' | 'trim' | 'large'>,
+            default: ''
         },
         /** 弹窗自定义类名 */
         customClass: {
@@ -131,6 +136,16 @@ export default defineComponent({
         zone: {
             type: String,
             default: ''
+        },
+        /** 是否将弹窗插入至body元素上 */
+        appendToBody: {
+            type: Boolean,
+            default: false
+        },
+        /** 视图堆叠顺序校正值 */
+        zIndex: {
+            type: Number,
+            default: 0
         }
     },
 
@@ -141,12 +156,13 @@ export default defineComponent({
     mounted() {
         this.size.width = this.width || _vdialog_default_width;
         this.size.height = this.height || 0;
+        this.size.height_initial = this.size.height;
         if (this.modelValue) this.onShown();
-        window.addEventListener('resize', this.onCanvasResize);
+        window.addEventListener('resize', this.onWindowResize);
     },
 
     unmounted() {
-        window.removeEventListener("resize", this.onCanvasResize);
+        window.removeEventListener("resize", this.onWindowResize);
         this.onHide();
     },
 
@@ -160,6 +176,11 @@ export default defineComponent({
                     this.onHide();
                 }
             })
+        },
+        width(val: number) {
+            if (val && this.drag.side <= 0) {
+                this.size.width = val;
+            }
         }
     },
 
@@ -167,10 +188,12 @@ export default defineComponent({
 
         //#region LifeCycle
 
+        //开始加载
         onLoad() {
 
         },
 
+        //开始呈现
         onShown() {
             this.pos.zindex++;
             if (this.timeout > 0) {
@@ -178,18 +201,24 @@ export default defineComponent({
                     this.close();
                 }, this.timeout);
             }
+            if (this.size.height_initial) {
+                this.size.height = this.size.height_initial;
+            }
             this.observer = new ResizeObserver(entries => {
                 if (!this.drag.side && !this.states.moved) {
                     this.onResize();
                 }
             });
             this.observer.observe(this.wrapper!);
+            this.$emit('opened');
         },
 
+        //结束呈现
         onHide() {
             this.observer?.disconnect();
         },
 
+        //对话关闭
         onClosed() {
             this.$emit('closed');
         },
@@ -198,10 +227,15 @@ export default defineComponent({
 
         //#region Response
 
+        //更新布局
         onResize(animate: boolean = false) {
+            if (!this.modelValue) return;
 
             let width = this.wrapper!.offsetWidth,
                 height = this.wrapper!.offsetHeight;
+            if (!this.size.height_initial && height > 6) {
+                this.size.height_initial = height - 6;
+            }
             this.pos.left = (window.innerWidth - width) / 2;
             this.pos.top = (window.innerHeight - height) / 2;
 
@@ -212,12 +246,25 @@ export default defineComponent({
                 }, 800);
             }
 
+            lazy('nova-dialog-resize').then(() => {
+                this.$emit('change', { 
+                    left: this.pos.left, top: this.pos.top, 
+                    width: this.size.width, height: this.size.height,
+                    maximized: this.pos.maximized
+                });
+            })
+
         },
 
-        onCanvasResize() {
-            lazy('dialog-canvas-resize').then(() => this.$emit('change'));
+        //窗体调整
+        onWindowResize() {
+            if (!this.modelValue) return;
+            lazy('nova-dialog-resize').then(() => {
+                this.onResize(true)
+            })
         },
 
+        //点击对话外
         onHitOut() {
             if (this.stable) {
                 if (this.shake) this.states.shaking = true;
@@ -232,11 +279,13 @@ export default defineComponent({
 
         //#region Drag-Resize
 
+        //拖拽开始
         onDragStart(side: number, event: MouseEvent) {
             if (!this.movable) return;
 
+            //变更拖拽状态标识
             this.drag.side = side;
-            this.states.moving = side < 0;
+            this.states.moving = side < 0; //拖拽标题栏移动
 
             //记录初始鼠标位置
             this.drag.point.x = event.clientX;
@@ -246,7 +295,7 @@ export default defineComponent({
             this.drag.record.left = this.pos.left;
             this.drag.record.top = this.pos.top;
             this.drag.record.width = this.size.width;
-            this.drag.record.height = this.size.height;
+            this.drag.record.height = this.size.height || (this.wrapper!.offsetHeight - 6);
 
             //添加事件监听器，用于响应鼠标移动和鼠标释放事件
             document.addEventListener("mousemove", this.onDragging);
@@ -254,6 +303,7 @@ export default defineComponent({
 
         },
 
+        //拖拽移动
         onDragging(e: MouseEvent) {
             if (!this.drag.side) return;
 
@@ -288,7 +338,9 @@ export default defineComponent({
 
         },
 
+        //拖拽结束
         onDragEnd() {
+
             if (this.drag.side > 0) {
                 this.onResize(true);
             }
@@ -297,8 +349,10 @@ export default defineComponent({
                 this.states.moved = true;
             }
             this.drag.side = 0;
+
             document.removeEventListener("mousemove", this.onDragging);
             document.removeEventListener("mouseup", this.onDragEnd);
+
         },
 
         //#endregion
