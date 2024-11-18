@@ -2,7 +2,7 @@
 > Full-featured dialog box for [Vue.js](http://vuejs.org).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rocmemory/nova-dialog/refs/heads/main/example/public/preview.gif" />
+  <img src="https://raw.githubusercontent.com/rocmemory/nova-dialog/refs/heads/main/example/public/previews.gif" />
   <br/>
   <b>Check out the <a href="https://github.com/rocmemory/nova-dialog/tree/main/example" target="_blank">live demo</a>.</b>
 </p>
