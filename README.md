@@ -105,17 +105,26 @@ This example below shows all of the slot-usage:
 |    Event           |    Description   |   Returns  |
 | ------------------ | ---------------- | :--------: |
 | opened | When the dialog has been shown. | void |
-| closed    | When the dialog has been destoyed. | void |
-| change         | When user drags the dialog. | posision, size |
+| closed | When the dialog has been destoyed. | void |
+| change | When user drags the dialog. | posision, size |
 
 ## Exposes
 
 |    Method           |    Description   |   Params  |
 | ------------------ | ---------------- | :--------: |
-| flyto    | Moves to the specified element. | none |
-| hide    | Make the dialog invisible. | none |
-| shift         | When user drags the dialog. | none |
-| close         | Toggle between maximum and normal state. | none |
+| flyto | Moves to the specified element. | none |
+| hide | Make the dialog invisible. | none |
+| shift | When user drags the dialog. | none |
+| close | Toggle between maximum and normal state. | none |
+
+## Slots
+
+|    Name           |    Property   |   Returns  |
+| ------------------ | ---------------- | :--------: |
+| default | content | The content displayed in the body area of the dialog box. |
+| head | title | Appears in the header and will replace title. |
+| tool | —— | Customize a set of toolbar buttons in the title bar. |
+| foot | —— | Content of the footer which has a right alignment. |
 
 ## License
 **[nova-dialog](https://github.com/rocmemory/vue-nova-dialog)** by [mengyaming](https://twitter.com/mengyaming) licensed under [MIT](LICENSE).
