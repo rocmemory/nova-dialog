@@ -12,7 +12,7 @@
   "dependencies": {
     "dayjs": "^1.11.11",
     "element-plus": "^2.6.2",
-    "nova-dialog": "^1.0.2",
+    "nova-dialog": "^1.0.8",
     "vite-plugin-vue-devtools": "^7.0.27",
     "vue": "^3.4.21"
   },

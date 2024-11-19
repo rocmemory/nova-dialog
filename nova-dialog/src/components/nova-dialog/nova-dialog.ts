@@ -5,6 +5,13 @@ const __window_ins_dialog = window as any;
 if (!__window_ins_dialog.zindex) __window_ins_dialog.zindex = 100;
 const _vdialog_default_width = 600;
 
+interface OffsetRect {
+    left: number,
+    top: number,
+    right: number,
+    bottom: number
+}
+
 export default defineComponent({
 
     name: 'nova-dialog',
@@ -12,7 +19,8 @@ export default defineComponent({
 
     setup() {
         return {
-            wrapper: ref<HTMLElement | null>(null),
+            nova_wrapper: ref<HTMLElement | null>(null),
+            nova_player: ref<HTMLElement | null>(null),
             size: ref({
                 width: _vdialog_default_width,
                 height: 500,
@@ -31,6 +39,7 @@ export default defineComponent({
                 record: { left: 0, top: 0, width: 0, height: 0 }
             },
             states: ref({
+                flied: false,       //是否执行过绝对定位
                 resizing: false,
                 moving: false,
                 moved: false,
@@ -132,6 +141,14 @@ export default defineComponent({
             type: String,
             default: ''
         },
+        nearby: {
+            type: Object as PropType<HTMLElement>,
+            default: null
+        },
+        offset: {
+            type: Object as PropType<OffsetRect>,
+            default: null
+        },
         /** 弹窗容器的分类标识,用于存储状态和用户配置 */
         zone: {
             type: String,
@@ -158,11 +175,11 @@ export default defineComponent({
         this.size.height = this.height || 0;
         this.size.height_initial = this.size.height;
         if (this.modelValue) this.onShown();
-        window.addEventListener('resize', this.onWindowResize);
+        window.addEventListener('resize', this.onResize);
     },
 
     unmounted() {
-        window.removeEventListener("resize", this.onWindowResize);
+        window.removeEventListener("resize", this.onResize);
         this.onHide();
     },
 
@@ -195,22 +212,40 @@ export default defineComponent({
 
         //开始呈现
         onShown() {
+
+            //更新堆叠层次
             this.pos.zindex++;
+
+            //自动关闭
             if (this.timeout > 0) {
                 setTimeout(() => {
                     this.close();
                 }, this.timeout);
             }
+
+            //记录初始高度
             if (this.size.height_initial) {
                 this.size.height = this.size.height_initial;
             }
-            this.observer = new ResizeObserver(entries => {
-                if (!this.drag.side && !this.states.moved) {
-                    this.onResize();
-                }
-            });
-            this.observer.observe(this.wrapper!);
+
+            //初始化状态值
+            this.drag.side = 0;
+            this.states.flied = false;
+            this.states.resizing = false;
+            this.states.moving = false;
+            this.states.moved = false;
+            this.states.shaking = false;
+
+            //监视大小变化
+            this.observer = new ResizeObserver(entries => this.onResize());
+            this.observer.observe(this.nova_wrapper!);
+
+            //尝试绝对定位
+            this.flyto(this.nearby);
+
+            //触发事件
             this.$emit('opened');
+
         },
 
         //结束呈现
@@ -228,40 +263,33 @@ export default defineComponent({
         //#region Response
 
         //更新布局
-        onResize(animate: boolean = false) {
+        onResize($event?: UIEvent) {
             if (!this.modelValue) return;
 
-            let width = this.wrapper!.offsetWidth,
-                height = this.wrapper!.offsetHeight;
-            if (!this.size.height_initial && height > 6) {
-                this.size.height_initial = height - 6;
-            }
-            this.pos.left = (window.innerWidth - width) / 2;
-            this.pos.top = (window.innerHeight - height) / 2;
-
-            if (animate) {
+            if ($event) {
+                this.flyto(this.nearby);
                 this.states.resizing = true;
-                setTimeout(() => {
-                    this.states.resizing = false;
-                }, 800);
+            }
+
+            if (!this.drag.side && !this.states.moved) {
+                let width = this.nova_wrapper!.offsetWidth,
+                    height = this.nova_wrapper!.offsetHeight;
+                if (!this.size.height_initial && height > 6) {
+                    this.size.height_initial = height - 6;
+                }
+                this.pos.left = (window.innerWidth - width) / 2;
+                this.pos.top = (window.innerHeight - height) / 2;
             }
 
             lazy('nova-dialog-resize').then(() => {
-                this.$emit('change', { 
-                    left: this.pos.left, top: this.pos.top, 
+                this.$emit('change', {
+                    left: this.pos.left, top: this.pos.top,
                     width: this.size.width, height: this.size.height,
                     maximized: this.pos.maximized
                 });
+                this.states.resizing = false;
             })
 
-        },
-
-        //窗体调整
-        onWindowResize() {
-            if (!this.modelValue) return;
-            lazy('nova-dialog-resize').then(() => {
-                this.onResize(true)
-            })
         },
 
         //点击对话外
@@ -295,7 +323,7 @@ export default defineComponent({
             this.drag.record.left = this.pos.left;
             this.drag.record.top = this.pos.top;
             this.drag.record.width = this.size.width;
-            this.drag.record.height = this.size.height || (this.wrapper!.offsetHeight - 6);
+            this.drag.record.height = this.size.height || this.nova_player!.offsetHeight;
 
             //添加事件监听器，用于响应鼠标移动和鼠标释放事件
             document.addEventListener("mousemove", this.onDragging);
@@ -339,16 +367,18 @@ export default defineComponent({
         },
 
         //拖拽结束
-        onDragEnd() {
+        onDragEnd($event: MouseEvent) {
 
-            if (this.drag.side > 0) {
-                this.onResize(true);
+            let resizing = this.drag.side > 0;
+            this.drag.side = 0;
+
+            if (resizing) {
+                this.onResize($event);
             }
             else {
                 this.states.moving = false;
                 this.states.moved = true;
             }
-            this.drag.side = 0;
 
             document.removeEventListener("mousemove", this.onDragging);
             document.removeEventListener("mouseup", this.onDragEnd);
@@ -358,6 +388,30 @@ export default defineComponent({
         //#endregion
 
         //#region Exposes
+
+        flyto(nearby: any) {
+
+            let $target = typeof nearby == 'string' ? document.querySelector(nearby) : nearby;
+            if ($target?.$el) $target = $target.$el;
+            if (!$target) return;
+
+            let rect = ($target as HTMLElement).getBoundingClientRect();
+            let x = rect.x || rect.left,
+                y = (rect.y || rect.top) + rect.height,
+                w = this.nova_player!.offsetWidth || this.size.width,
+                h = this.nova_player!.offsetHeight || this.size.height;
+            if (x + w > window.innerWidth) x -= w;
+            if (x < 0) x = 0;
+            if (y + h > window.innerHeight) y = (rect.y || rect.top) - (h + rect.height);
+            if (y < 0) y = 0;
+            if (this.offset?.left) x += this.offset.left;
+            if (this.offset?.top) y += this.offset.top;
+
+            this.states.moved = true;
+            this.pos.left = x;
+            this.pos.top = y;
+
+        },
 
         /** 最小化 */
         hide() {

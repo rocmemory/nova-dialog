@@ -21,6 +21,12 @@ const help_prop = [
         initial: 'empty'
     },
     {
+        property: 'nearby',
+        desc: 'if set, the dialog box pops up near the specified element',
+        type: 'ref<HtmlElement>',
+        initial: 'null'
+    },
+    {
         property: 'width',
         desc: 'initial width for the dialog wrapper',
         type: 'number',
@@ -106,7 +112,7 @@ const help_prop = [
     },
     {
         property: 'customClass',
-        desc: 'set a custom class name for the dialog wrapper',
+        desc: 'set a custom class name for the dialog wrapper, also: custom-class',
         type: 'string',
         initial: 'empty'
     },
@@ -115,6 +121,12 @@ const help_prop = [
         desc: 'classification identification, which used to store status and user configuration, not supported before version 2.x',
         type: 'string',
         initial: 'empty'
+    },
+    {
+        property: 'appendToBody',
+        desc: 'append dialog wrapper to body element, nested dialog boxes must be true',
+        type: 'boolean',
+        initial: 'false'
     }
 ]
 const help_slot = [
@@ -141,13 +153,15 @@ const help_slot = [
 ]
 
 export default defineComponent({
-    data() {
+    setup() {
         return {
             help: ref({
                 prop: help_prop,
-                slot: help_slot
+                slot: help_slot,
+                play: true
             }),
             values: ref({
+                use_nearby: false,
                 modelValue: false,
                 title: 'i am a dialog',
                 icon: 'light',
@@ -167,7 +181,8 @@ export default defineComponent({
                 slim: false,
                 customClass: '',
                 zone: ''
-            })
+            }),
+            target: ref<HTMLElement>()
         }
     },
 
@@ -176,11 +191,31 @@ export default defineComponent({
     },
 
     mounted() {
+
+        if (/mode\=simple/g.test(location.search)) {
+            this.help.play = false;
+        }
+
         let table: string[] = [];
         for (let row of help_prop) {
             table.push(`| ${row.property} | ${row.desc} | ${row.type} | ${row.initial} |`);
         }
         let note = table.join('\n');
         console.log('properties', note);
+
+    },
+
+    methods: {
+
+        playCenter() {
+            this.values.use_nearby = false;
+            this.values.modelValue = true;
+        },
+
+        playNearby() {
+            this.values.use_nearby = true;
+            this.values.modelValue = true;
+        }
+
     }
 })

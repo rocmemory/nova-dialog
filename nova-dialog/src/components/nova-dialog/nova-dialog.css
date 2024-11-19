@@ -13,9 +13,13 @@
     overflow: hidden;
 }
 
-.height-hide {
+.thin {
     height: 0 !important;
     border: none !important;
+}
+
+.alpha {
+    opacity: 0 !important;
 }
 
 .pos-fixed {

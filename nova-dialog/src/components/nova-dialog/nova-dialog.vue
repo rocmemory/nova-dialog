@@ -7,12 +7,12 @@
                  :class="{ 'max': pos.maximized }" @resize="resized">
 
                 <!-- 暗色遮罩层 -->
-                <div v-if="mask" class="v-dialog-mask pos-absolute corner full scroll-n" :style="{ 'z-index': pos.zindex + zIndex + 1 }"
+                <div class="v-dialog-mask pos-absolute corner full scroll-n" :class="{ 'alpha': !mask }" :style="{ 'z-index': pos.zindex + zIndex + 1 }"
                      @click="onHitOut()">
                 </div>
 
                 <!-- 弹窗容器 -->
-                <div v-if="modelValue" ref="wrapper" class="v-dialog-wrapper pos-absolute"
+                <div v-if="modelValue" ref="nova_wrapper" class="v-dialog-wrapper pos-absolute"
                      :class="[customClass, { 'anim': states.resizing, 'buzz': states.shaking }]"
                      :style="{
                         'left': `${pos.left}px`,
@@ -24,17 +24,17 @@
                      @change="onResize">
 
                     <!-- 弹窗呈现 -->
-                    <div class="v-dialog-player v-dialog-part part-player full scroll-n">
+                    <div ref="nova_player" class="v-dialog-player v-dialog-part part-player full scroll-n">
 
                         <!-- 弹窗顶部 -->
-                        <div class="v-dialog-part part-head v-dialog-head pos-relative" :class="{ 'height-hide': !header }">
+                        <div class="v-dialog-part part-head v-dialog-head pos-relative" :class="{ 'thin': !header }">
 
                             <!-- 标题栏内容 -->
-                            <div v-if="$slots.head" class="v-dialog-head-content custom" :class="{ 'move': states.moving }"
+                            <div v-if="$slots.head && header" class="v-dialog-head-content custom" :class="{ 'move': states.moving }"
                                  @mousedown.prevent="onDragStart(-1, $event)">
                                 <slot name="head"></slot>
                             </div>
-                            <div v-else class="v-dialog-head-content" :class="{ 'move': states.moving }"
+                            <div v-else-if="header" class="v-dialog-head-content" :class="{ 'move': states.moving }"
                                  @mousedown.prevent="onDragStart(-1, $event)">
                                 <i v-if="icon" class="icon dialogfont" :class="`dialog-icon-${icon}`"></i>
                                 <h1>{{ title }}</h1>
