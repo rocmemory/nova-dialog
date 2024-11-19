@@ -104,7 +104,7 @@ This example below shows all of the slot-usage:
 
 |    Event           |    Description   |   Returns  |
 | ------------------ | ---------------- | :--------: |
-| opened |  |  |
+| opened | When the dialog has been shown. | void |
 | closed    | When the dialog has been destoyed. | void |
 | change         | When user drags the dialog. | posision, size |
 
