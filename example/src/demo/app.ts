@@ -27,6 +27,12 @@ const help_prop = [
         initial: 'null'
     },
     {
+        property: 'offset',
+        desc: 'when under nearby mode, offset({ left, top }) of the position',
+        type: '{ left, top }',
+        initial: '{ left: 0, top: 0 }'
+    },
+    {
         property: 'width',
         desc: 'initial width for the dialog wrapper',
         type: 'number',

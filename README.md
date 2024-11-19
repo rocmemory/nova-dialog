@@ -2,7 +2,7 @@
 > Full-featured dialog box for [Vue.js](http://vuejs.org).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rocmemory/vue-nova-dialog/refs/heads/main/example/public/previews.gif" />
+  <img src="https://raw.githubusercontent.com/rocmemory/vue-nova-dialog/refs/heads/main/example/public/preview-new.gif" />
   <br/>
   <b>Check out the <a href="https://github.com/rocmemory/vue-nova-dialog/tree/main/example" target="_blank">live demo</a>.</b>
 </p>
@@ -14,6 +14,7 @@
 * Customize the header/toolbar/footer content.
 * Automatic center alignment with animation.
 * Click outside triggers the shaking animation.
+* Append to body, or popup near an element.
 * Minimize, Maximize and Restore buttons.
 
 ## Installation
@@ -93,7 +94,10 @@ This example below shows all of the slot-usage:
 | escape | press the esc key will close the dialog | boolean | true |
 | timeout | after some milliseconds the dialog close automatically | number | 0 |
 | slim | if set to true, the inside margin is very small | boolean | false |
-| customClass | set a custom class name for the dialog wrapper | string | empty |
+| custom-class | set a custom class name for the dialog wrapper, also: custom-class | string | empty |
+| append-to-body | append dialog wrapper to body element, nested dialog boxes must be true | boolean | false |
+| nearby | if set, the dialog box pops up near the specified element | ref<HtmlElement> | null |
+| offset | when under nearby mode, offset({ left, top }) of the position | { left, top } | null |
 | zone | classification identification, which used to store status and user configuration, not supported before version 2.x | string | empty |
 
 ## Events
