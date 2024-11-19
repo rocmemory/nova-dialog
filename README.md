@@ -104,6 +104,7 @@ This example below shows all of the slot-usage:
 
 |    Event           |    Description   |   Returns  |
 | ------------------ | ---------------- | :--------: |
+| opened |  |  |
 | closed    | When the dialog has been destoyed. | void |
 | change         | When user drags the dialog. | posision, size |
 
@@ -111,6 +112,7 @@ This example below shows all of the slot-usage:
 
 |    Method           |    Description   |   Params  |
 | ------------------ | ---------------- | :--------: |
+| flyto    | Moves to the specified element. | none |
 | hide    | Make the dialog invisible. | none |
 | shift         | When user drags the dialog. | none |
 | close         | Toggle between maximum and normal state. | none |
